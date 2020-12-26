@@ -1,0 +1,50 @@
+<div class="container-fluid p-5">
+  <form [formGroup]="form">
+    <div class="row pl-5 pr-5">
+      <!-- DATASET -->
+      <mat-form-field class="col-12">
+        <ngx-mat-file-input placeholder="Dataset" formControlName="dataset">
+        </ngx-mat-file-input>
+        <mat-error>Seleccione un archivo</mat-error>
+      </mat-form-field>
+
+      <!-- PRUEBAS -->
+      <section class="col-12">
+        <mat-radio-group>
+          <mat-radio-button>Mismo dataset</mat-radio-button>
+          <br />
+          <mat-radio-button>Archivo de pruebas externo</mat-radio-button>
+          <br />
+        </mat-radio-group>
+      </section>
+
+      
+        <mat-form-field class="col-12">
+          <ngx-mat-file-input
+            placeholder="Dataset"
+            formControlName="datasetext"
+          >
+          </ngx-mat-file-input>
+          <mat-error>Seleccione un archivo</mat-error>
+        </mat-form-field>
+
+      <section class="col-12">
+        <mat-radio-group>
+          <mat-radio-button>Validación simple</mat-radio-button>
+          <br />
+          <mat-radio-button>Validación cruzada (50% - 50%)</mat-radio-button>
+        </mat-radio-group>
+      </section>
+
+      <mat-form-field class="col-12">
+        <mat-label>Interválo de discretización</mat-label>
+        <input matInput type="number" formControlName="inDis" />
+        <mat-error>Intervalo de discretiazación inválido</mat-error>
+      </mat-form-field>
+
+      <button class="btn-block" mat-raised-button color="primary" type="submit">
+        Análisis
+      </button>
+    </div>
+  </form>
+</div>
