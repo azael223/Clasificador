@@ -22,15 +22,21 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readTypeChange() {
     const readType = this.form.get('readType');
-    console.log(readType.value)
+    console.log(readType.value);
     const dataExt = this.form.get('datasetExt');
     const validationType = this.form.get('validationType');
     if (readType.value === 'AE') {
       dataExt.setValidators(Validators.required);
-      validationType.clearValidators();
+      validationType.clearValidators(); 
     } else {
       validationType.setValidators(Validators.required);
       dataExt.clearValidators();
+    }
+  }
+
+  performRequest() {
+    console.log(this.form);
+    if (this.form.valid) {
     }
   }
 
