@@ -1,0 +1,14 @@
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content {
+  padding: 5vh;
+  height: calc(100vh - 64px);
+}
+.table-content {
+  height: 100% !important;
+  overflow-y: auto;
+  background-color: rgb(66, 66, 66);
+}

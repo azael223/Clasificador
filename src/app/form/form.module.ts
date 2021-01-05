@@ -6,11 +6,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
-import { MatTabsModule } from '@angular/material/tabs';
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { MatRadioModule } from '@angular/material/radio';
-
+import { TablesModule } from '../tables/tables.module';
+import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [FormComponent],
   imports: [
@@ -23,6 +22,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatIconModule,
     NgxMatFileInputModule,
     MatRadioModule,
+    TablesModule,
+    MatDialogModule,
   ],
   exports: [FormComponent],
 })

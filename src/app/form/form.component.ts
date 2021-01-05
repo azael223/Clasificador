@@ -1,18 +1,31 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import * as Papa from 'papaparse';
 
 import { takeUntil } from 'rxjs/operators';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
 })
 export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
-  constructor(private _fb: FormBuilder) {}
-  private dataset;
-  private datasetExt;
+  constructor(
+    private _fb: FormBuilder,
+    private _dialog: MatDialog,
+    private _dialogRef: MatDialogRef<FormComponent>
+  ) {}
 
   public form = this._fb.group({
     dataset: new FormControl('', [Validators.required]),
@@ -42,13 +55,17 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
     const dataset = this.form.get('dataset').value;
     if (this.form.valid) {
       Papa.parse(dataset, {
-        complete: this.transformData
+        complete: this.transformData,
       });
     }
   }
 
   transformData(data) {
     console.log(data);
+  }
+
+  onNoClick(data?: any) {
+    this._dialogRef.close(data);
   }
 
   ngOnInit(): void {}
