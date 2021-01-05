@@ -9,7 +9,7 @@
       >
         <ngx-mat-file-input
           #dataset
-          [accept]="'.csv, .txt'"
+          [accept]="'.csv, .txt, .data'"
           placeholder="Data Set"
           class="cursor-pointer"
           formControlName="dataset"
@@ -48,7 +48,7 @@
           >
             <ngx-mat-file-input
               class="cursor-pointer"
-              [accept]="'.csv, .txt'"
+              [accept]="'.csv, .txt, .data'"
               #datasetExt
               placeholder="Data Set Externa"
               formControlName="datasetExt"
