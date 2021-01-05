@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { FilesService } from '../services/files.service';
+import * as Papa from 'papaparse';
+
 import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-form',
@@ -9,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./form.component.scss'],
 })
 export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
-  constructor(private _fb: FormBuilder, private _fr: FilesService) {}
+  constructor(private _fb: FormBuilder) {}
   private dataset;
   private datasetExt;
 
@@ -40,11 +41,16 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.form);
     const dataset = this.form.get('dataset').value;
     if (this.form.valid) {
-      this._fr.csvToObject(dataset).then((data) => {
-        console.log(data);
+      Papa.parse(dataset, {
+        complete: this.transformData
       });
     }
   }
+
+  transformData(data) {
+    console.log(data);
+  }
+
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {}
