@@ -25,6 +25,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy))
       .subscribe((data) => {
         if (data) {
+          console.log(data)
         }
       });
   }

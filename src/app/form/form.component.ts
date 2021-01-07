@@ -15,6 +15,14 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
+
+export interface Data{
+  datasetExt?:any[];
+  dataset?:any[];
+  validacion:string;
+  inDis:number;
+  clasificacion:string
+}
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -33,6 +41,7 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
     readType: new FormControl('MD', [Validators.required]),
     validationType: new FormControl('VS', []),
     inDis: new FormControl('', [Validators.required]),
+    classType: new FormControl('FI', [Validators.required])
   });
 
   private onDestroy = new Subject<any>();
@@ -61,7 +70,24 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   transformData(data) {
-    console.log(data);
+    let file:File
+    if(this.form.get('datasetExt').value &&
+      (this.form.get('readType').value === 'AE')){
+      file = this.form.get('datasetExt').value;
+    }else{
+    }
+    Papa.parse(file,{
+      complete: (dataExt:any)=>{
+        const dataSend:Data = {
+          dataset: data,
+          datasetExt: dataExt,
+          inDis: this.form.get('inDis').value,
+          validacion: this.form.get('validationType').value,
+          clasificacion: this.form.get('classType').value
+        }
+        this.onNoClick(dataSend)
+      }
+    })
   }
 
   onNoClick(data?: any) {
