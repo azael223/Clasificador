@@ -1,7 +1,9 @@
-<div class="container-fluid p-5">
+<div class="p-5 w-100 custom">
   <form [formGroup]="form" (ngSubmit)="performRequest()">
-    <div class="m-auto w-75 row p-5 border">
-      <h1>Clasificador</h1>
+    <div class="row p-5 border">
+      <div class="d-flex">
+        <h1>Clasificador</h1>
+      </div>
       <!-- DATASET -->
       <mat-form-field
         class="col-12 mb-3 cursor-pointer"
@@ -17,7 +19,17 @@
         </ngx-mat-file-input>
         <mat-error>Seleccione un archivo</mat-error>
       </mat-form-field>
-
+      <!--  -->
+      <section class="col-12 mb-3">
+        <!--  -->
+        <mat-radio-group formControlName="classType">
+          <mat-radio-button value="FI">Frecuencias Iguales</mat-radio-button>
+          <br />
+          <mat-radio-button value="AI"
+            >Anchos Iguales</mat-radio-button
+          >
+        </mat-radio-group>
+      </section>
       <!-- PRUEBAS -->
       <section class="col-12 mb-3">
         <mat-radio-group
