@@ -16,12 +16,12 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 
-export interface Data{
-  datasetExt?:any[];
-  dataset?:any[];
-  validacion:string;
-  inDis:number;
-  clasificacion:string
+export interface Data {
+  datasetExt?: any[];
+  dataset?: any[];
+  validacion: string;
+  inDis: number;
+  clasificacion: string;
 }
 @Component({
   selector: 'app-form',
@@ -41,7 +41,7 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
     readType: new FormControl('MD', [Validators.required]),
     validationType: new FormControl('VS', []),
     inDis: new FormControl('', [Validators.required]),
-    classType: new FormControl('FI', [Validators.required])
+    classType: new FormControl('FI', [Validators.required]),
   });
 
   private onDestroy = new Subject<any>();
@@ -61,33 +61,31 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   performRequest() {
     console.log(this.form);
-    const dataset = this.form.get('dataset').value;
     if (this.form.valid) {
+      const dataset = this.form.get('dataset').value;
+      const datasetExt = this.form.get('datasetExt').value;
       Papa.parse(dataset, {
-        complete: this.transformData,
+        complete: (data: any) => {
+          let file: File;
+          if (datasetExt && this.form.get('readType').value === 'AE') {
+            file = datasetExt;
+          } else {
+          }
+          Papa.parse(file, {
+            complete: (dataExt: any) => {
+              const dataSend: Data = {
+                dataset: data.data,
+                datasetExt: dataExt.data,
+                inDis: this.form.get('inDis').value,
+                validacion: this.form.get('validationType').value,
+                clasificacion: this.form.get('classType').value,
+              };
+              this.onNoClick(dataSend);
+            },
+          });
+        },
       });
     }
-  }
-
-  transformData(data) {
-    let file:File
-    if(this.form.get('datasetExt').value &&
-      (this.form.get('readType').value === 'AE')){
-      file = this.form.get('datasetExt').value;
-    }else{
-    }
-    Papa.parse(file,{
-      complete: (dataExt:any)=>{
-        const dataSend:Data = {
-          dataset: data,
-          datasetExt: dataExt,
-          inDis: this.form.get('inDis').value,
-          validacion: this.form.get('validationType').value,
-          clasificacion: this.form.get('classType').value
-        }
-        this.onNoClick(dataSend)
-      }
-    })
   }
 
   onNoClick(data?: any) {
