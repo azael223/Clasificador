@@ -127,5 +127,8 @@
       }
     }
   },
-  "defaultProject": "Clasificador"
+  "defaultProject": "Clasificador",
+  "cli": {
+    "analytics": false
+  }
 }

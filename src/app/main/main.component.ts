@@ -30,6 +30,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+
   ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
