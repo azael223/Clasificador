@@ -41,7 +41,7 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
     readType: new FormControl('MD', [Validators.required]),
     validationType: new FormControl('VS', []),
     inDis: new FormControl('', [Validators.required]),
-    classType: new FormControl('FI', [Validators.required]),
+    classType: new FormControl('FD', [Validators.required]),
   });
 
   private onDestroy = new Subject<any>();
@@ -66,23 +66,21 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
       const datasetExt = this.form.get('datasetExt').value;
       Papa.parse(dataset, {
         complete: (data: any) => {
-          let file: File;
+          let dataSend: Data = {
+            dataset: data.data,
+            inDis: this.form.get('inDis').value,
+            validacion: this.form.get('validationType').value,
+            clasificacion: this.form.get('classType').value,
+          };
           if (datasetExt && this.form.get('readType').value === 'AE') {
-            file = datasetExt;
-          } else {
+            Papa.parse(datasetExt, {
+              complete: (dataExt: any) => {
+                dataSend = { ...dataSend, datasetExt: dataExt.data };
+                this.onNoClick(dataSend);
+              },
+            });
           }
-          Papa.parse(file, {
-            complete: (dataExt: any) => {
-              const dataSend: Data = {
-                dataset: data.data,
-                datasetExt: dataExt.data,
-                inDis: this.form.get('inDis').value,
-                validacion: this.form.get('validationType').value,
-                clasificacion: this.form.get('classType').value,
-              };
-              this.onNoClick(dataSend);
-            },
-          });
+          this.onNoClick(dataSend);
         },
       });
     }
