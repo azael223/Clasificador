@@ -4,7 +4,7 @@ export class Clasificacion {
   probDensidad(mean: number, std: number, x: number) {
     const y2 = -((Math.pow(x - mean, 2) / 2) * Math.pow(mean, 2));
     return 1 / (std * Math.sqrt(2 * Math.PI), Math.pow(2.71828, y2));
-    
+
   }
 
   devStd(){}
@@ -40,9 +40,25 @@ class Validacion {
   cruzada() {}
 }
 class Evaluación {
-  confusion() {}
-  precision() {}
-  exhaustividad() {}
-  f1() {}
-  accuracy() {}
+  //confusion(arr:number[],TP:number,TN:number) {}
+  precision(arr:number[],TP:number,FP:number) {
+    const total=arr.length;
+    const Acc = TP/(TP + FP);
+    return Acc;
+  }
+  exhaustividad(arr:number[],TP:number,FN:number) {
+    const total=arr.length;
+    const Acc = TP/(TP + FN);
+    return Acc;
+  }
+  f1(arr:number[],precisionF: number, recall:number) {
+    this.precision(arr,precisionF,recall);
+    const total = 2 * (precisionF*recall)/(precisionF+recall);
+    return total;
+  }
+  accuracy(arr:number[],TP:number,TN:number) {
+    const total=arr.length;
+    const Acc = TP+TN /total;
+    return Acc;
+  }
 }
