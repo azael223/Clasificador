@@ -1,13 +1,28 @@
 export class Clasificacion {
   laplace() {}
 
-  probDensidad(mean: number, std: number, x: number) {
-    const y2 = -((Math.pow(x - mean, 2) / 2) * Math.pow(mean, 2));
-    return 1 / (std * Math.sqrt(2 * Math.PI), Math.pow(2.71828, y2));
-
+  calcularProbabilidadDensidad(arr: number[], att: number) {
+    const media = this.media(arr);
+    const std = this.devStd(arr, media);
+    return this.probDensidad(media, std, att);
   }
 
-  devStd(){}
+  probDensidad(media: number, std: number, x: number) {
+    const y2 = -((Math.pow(x - media, 2) / 2) * Math.pow(media, 2));
+    return 1 / (std * Math.sqrt(2 * Math.PI), Math.pow(2.71828, y2));
+  }
+
+  devStd(arr: number[], media: number) {
+    let sum = 0;
+    arr.forEach((element) => {
+      sum += Math.pow(element - media, 2);
+    });
+    return Math.sqrt(sum / arr.length);
+  }
+
+  media(arr: number[]) {
+    return arr.reduce((a, b) => a + b, 0) / arr.length;
+  }
 
   static frecIguales(arr: number[], bins: number) {
     arr = arr.sort((a, b) => a - b);
@@ -41,24 +56,24 @@ class Validacion {
 }
 class Evaluación {
   //confusion(arr:number[],TP:number,TN:number) {}
-  precision(arr:number[],TP:number,FP:number) {
-    const total=arr.length;
-    const Acc = TP/(TP + FP);
+  precision(arr: number[], TP: number, FP: number) {
+    const total = arr.length;
+    const Acc = TP / (TP + FP);
     return Acc;
   }
-  exhaustividad(arr:number[],TP:number,FN:number) {
-    const total=arr.length;
-    const Acc = TP/(TP + FN);
+  exhaustividad(arr: number[], TP: number, FN: number) {
+    const total = arr.length;
+    const Acc = TP / (TP + FN);
     return Acc;
   }
-  f1(arr:number[],precisionF: number, recall:number) {
-    this.precision(arr,precisionF,recall);
-    const total = 2 * (precisionF*recall)/(precisionF+recall);
+  f1(arr: number[], precisionF: number, recall: number) {
+    this.precision(arr, precisionF, recall);
+    const total = (2 * (precisionF * recall)) / (precisionF + recall);
     return total;
   }
-  accuracy(arr:number[],TP:number,TN:number) {
-    const total=arr.length;
-    const Acc = TP+TN /total;
+  accuracy(arr: number[], TP: number, TN: number) {
+    const total = arr.length;
+    const Acc = TP + TN / total;
     return Acc;
   }
 }
