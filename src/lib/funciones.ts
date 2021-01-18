@@ -25,18 +25,23 @@ export class Clasificacion {
     let laplace = count/total;
   }
 
-  probDensidad(mean: number, std: number, x: number) {
-    const y2 = -((Math.pow(x - mean, 2) / 2) * Math.pow(mean, 2));
+  media(arr: number[]) {
+    return arr.reduce((a, b) => a + b, 0) / arr.length;
+  }
+
+  calcularProbabilidadDensidad(arr: number[], att: number) {
+    const media = this.media(arr);
+    const std = this.devStd(arr, media);
+    return this.probDensidad(media, std, att);
+  }
+
+  probDensidad(media: number, std: number, x: number) {
+    const y2 = -((Math.pow(x - media, 2) / 2) * Math.pow(media, 2));
     return 1 / (std * Math.sqrt(2 * Math.PI), Math.pow(2.71828, y2));
   }
 
-  devStd(data:number[]){
+  devStd(data:number[], media: number){
     let varianza = 0;
-    let media = 0;
-    data.forEach(element => {
-      media += element;
-    });
-    media = media/data.length;
     data.forEach(element => {
       varianza += Math.pow((element-media),2)
     });
@@ -92,14 +97,14 @@ class Validacion {
 }
 class Evaluación {
   //confusion(arr:number[],TP:number,TN:number) {}
-  precision(arr:number[],TP:number,FP:number) {
-    const total=arr.length;
-    const Acc = TP/(TP + FP);
+  precision(arr: number[], TP: number, FP: number) {
+    const total = arr.length;
+    const Acc = TP / (TP + FP);
     return Acc;
   }
-  exhaustividad(arr:number[],TP:number,FN:number) {
-    const total=arr.length;
-    const Acc = TP/(TP + FN);
+  exhaustividad(arr: number[], TP: number, FN: number) {
+    const total = arr.length;
+    const Acc = TP / (TP + FN);
     return Acc;
   }
   f1(arr:number[],precisionF: number, recall:number) {
@@ -107,9 +112,9 @@ class Evaluación {
     const total = 2 * (precisionF*recall)/(precisionF+recall);
     return total;
   }
-  accuracy(arr:number[],TP:number,TN:number) {
-    const total=arr.length;
-    const Acc = TP+TN /total;
+  accuracy(arr: number[], TP: number, TN: number) {
+    const total = arr.length;
+    const Acc = TP + TN / total;
     return Acc;
   }
 }
