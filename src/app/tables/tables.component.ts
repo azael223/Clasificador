@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-
+import { Funciones} from '../lib/functions';
 interface MatrizColumn {
   title: string;
   colDef: string;
