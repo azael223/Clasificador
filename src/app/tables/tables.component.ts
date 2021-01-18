@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Funciones} from '../lib/functions';
+import { Funciones} from '../../lib/functions.ts';
 interface MatrizColumn {
   title: string;
   colDef: string;
@@ -34,6 +34,7 @@ export class TablesComponent implements OnInit {
   getDisplayedColumns() {
     this.matrizColumns.forEach((col) => {
       this.displayedColumns.push(col.colDef);
+
     });
   }
 }
