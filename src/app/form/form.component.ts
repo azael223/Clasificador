@@ -22,6 +22,7 @@ export interface Data {
   validacion: string;
   inDis: number;
   clasificacion: string;
+  indexClase: string;
 }
 @Component({
   selector: 'app-form',
@@ -42,6 +43,7 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
     validationType: new FormControl('VS', []),
     inDis: new FormControl('', [Validators.required]),
     classType: new FormControl('FD', [Validators.required]),
+    classIndex: new FormControl('P', [Validators.required]),
   });
 
   private onDestroy = new Subject<any>();
@@ -71,6 +73,7 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
             inDis: this.form.get('inDis').value,
             validacion: this.form.get('validationType').value,
             clasificacion: this.form.get('classType').value,
+            indexClase: this.form.get('classIndex').value,
           };
           if (datasetExt && this.form.get('readType').value === 'AE') {
             Papa.parse(datasetExt, {
@@ -79,6 +82,8 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.onNoClick(dataSend);
               },
             });
+          } else {
+            dataSend = { ...dataSend, datasetExt: data.data };
           }
           this.onNoClick(dataSend);
         },

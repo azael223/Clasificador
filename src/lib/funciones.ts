@@ -1,51 +1,27 @@
-export interface LaplaceI{
+export interface LaplaceI {}
 
-}
-export class Clasificacion {
-  laplaceC_S(data:LaplaceI[], clases:string[]) {
-    let count;
-    data.forEach(element => {
-
-    });
-    const totalclas = clases.length;
-    let total = 0;
-    for(let i=0;i<data.length;i++){
-      if(data.toString[i] == "true"){
-        total++;
-      }
-    }
-    let laplace = count+1/total + totalclas;
-  }
-  laplaceS_S(data:LaplaceI[], clases:string[]){
-    let count;
-    data.forEach(element => {
-
-    });
-    const total = data.length;
-    let laplace = count/total;
-  }
-
-  media(arr: number[]) {
+export class Discretizacion {
+  private static media(arr: number[]) {
     return arr.reduce((a, b) => a + b, 0) / arr.length;
   }
 
-  calcularProbabilidadDensidad(arr: number[], att: number) {
+  static densidad(arr: number[], att: number) {
     const media = this.media(arr);
     const std = this.devStd(arr, media);
     return this.probDensidad(media, std, att);
   }
 
-  probDensidad(media: number, std: number, x: number) {
+  private static probDensidad(media: number, std: number, x: number) {
     const y2 = -((Math.pow(x - media, 2) / 2) * Math.pow(media, 2));
     return 1 / (std * Math.sqrt(2 * Math.PI), Math.pow(2.71828, y2));
   }
 
-  devStd(data:number[], media: number){
+  private static devStd(data: number[], media: number) {
     let varianza = 0;
-    data.forEach(element => {
-      varianza += Math.pow((element-media),2)
+    data.forEach((element) => {
+      varianza += Math.pow(element - media, 2);
     });
-    varianza = varianza/data.length;
+    varianza = varianza / data.length;
     return Math.sqrt(varianza);
   }
 
@@ -64,7 +40,18 @@ export class Clasificacion {
     }
     return retArr;
   }
+
   static anchosIguales(arr: number[], bins: number) {
+    const aClases = this._anchosIguales(arr, bins);
+    let clases = [];
+    arr.forEach((element) => {
+      aClases.forEach((clase: number[]) => {
+        
+      });
+    });
+  }
+
+  private static _anchosIguales(arr: number[], bins: number) {
     const min = Math.min.apply(Math, arr);
     const max = Math.max.apply(Math, arr);
     const w = (max - min) / bins;
@@ -75,24 +62,45 @@ export class Clasificacion {
     return retArr;
   }
 }
+
+export class Clasificacion {
+  laplaceC_S(data: LaplaceI[], clases: string[]) {
+    let count;
+    data.forEach((element) => {});
+    const totalclas = clases.length;
+    let total = 0;
+    for (let i = 0; i < data.length; i++) {
+      if (data.toString[i] == 'true') {
+        total++;
+      }
+    }
+    let laplace = count + 1 / total + totalclas;
+  }
+  laplaceS_S(data: LaplaceI[], clases: string[]) {
+    let count;
+    data.forEach((element) => {});
+    const total = data.length;
+    let laplace = count / total;
+  }
+}
 class Validacion {
-  simple(data:number[],y1:number,y1_2:number) {
-    let MSE= Math.pow((y1-y1_2),2);
+  simple(data: number[], y1: number, y1_2: number) {
+    let MSE = Math.pow(y1 - y1_2, 2);
     let n = data.length;
     let suma = 0;
-    data.forEach(element => {
+    data.forEach((element) => {
       suma += element;
     });
-    return suma*MSE/n;
+    return (suma * MSE) / n;
   }
 
-  cruzada(data:number[]) {
+  cruzada(data: number[]) {
     let k = data.length;
     let suma = 0;
-    data.forEach(element => {
+    data.forEach((element) => {
       suma += element;
     });
-    return suma/k;
+    return suma / k;
   }
 }
 class Evaluación {
@@ -107,9 +115,9 @@ class Evaluación {
     const Acc = TP / (TP + FN);
     return Acc;
   }
-  f1(arr:number[],precisionF: number, recall:number) {
-    this.precision(arr,precisionF,recall);//
-    const total = 2 * (precisionF*recall)/(precisionF+recall);
+  f1(arr: number[], precisionF: number, recall: number) {
+    this.precision(arr, precisionF, recall); //
+    const total = (2 * (precisionF * recall)) / (precisionF + recall);
     return total;
   }
   accuracy(arr: number[], TP: number, TN: number) {

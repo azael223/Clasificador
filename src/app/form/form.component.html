@@ -19,15 +19,22 @@
         </ngx-mat-file-input>
         <mat-error>Seleccione un archivo</mat-error>
       </mat-form-field>
+      <section class="col-12 mb-3">
+        <!--  -->
+        <div class="mb-2"><span>Index Clase</span></div>
+        <mat-radio-group formControlName="classIndex">
+          <mat-radio-button value="P">Principio</mat-radio-button>
+          <br />
+          <mat-radio-button value="F">Final</mat-radio-button>
+        </mat-radio-group>
+      </section>
       <!--  -->
       <section class="col-12 mb-3">
         <!--  -->
         <mat-radio-group formControlName="classType">
           <mat-radio-button value="FD">Función de Densidad</mat-radio-button>
           <br />
-          <mat-radio-button value="AI"
-            >Anchos Iguales</mat-radio-button
-          >
+          <mat-radio-button value="AI">Anchos Iguales</mat-radio-button>
         </mat-radio-group>
       </section>
       <!-- PRUEBAS -->
