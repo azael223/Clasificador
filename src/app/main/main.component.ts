@@ -6,6 +6,19 @@ import { FormComponent, Data } from '../form/form.component';
 import { Clasificacion, Discretizacion } from '../../lib/funciones';
 import { Dataset } from 'src/lib/Dataset';
 
+export interface ColumnI {
+  id: number;
+  atributos: any[];
+  type: string;
+}
+export interface DatasetI {
+  clases: string[];
+  data: {
+    columnas: ColumnI[];
+    clases: string[];
+  };
+}
+
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -36,41 +49,27 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
     let indexClase = data.indexClase === 'F' ? data.datasetExt[0].length : 1;
     const transformedData = Dataset.extraerClase(data.datasetExt, indexClase);
     const tipeAtt = Dataset.identificarData(transformedData.data.atributos);
-    console.log(transformedData, 'Data dividida');
-    console.log(tipeAtt, 'Tipo Atributos');
-    if (tipeAtt.continuos && tipeAtt.continuos.length > 0) {
-      const columnContinuos = this.columnAtributos(tipeAtt.continuos);
-      console.log(columnContinuos, 'Columna Continuos');
-      if (data.clasificacion === 'FD') {
-      } else {
-        columnContinuos.forEach((element: number[], index) => {
-          console.log(
-            Discretizacion.anchosIguales(
-              element,
-              transformedData.clases.length
-            ),
-            'densidad ' + index
-          );
-        });
-      }
-    }
-    if (tipeAtt.discretos && tipeAtt.discretos.length > 0) {
-      const columnDiscretos = this.columnAtributos(tipeAtt.discretos);
-      console.log(columnDiscretos, 'Columna Discreta');
-    }
-  }
+    let mainData: DatasetI = {
+      clases: transformedData.clases,
+      data: { columnas: tipeAtt, clases: transformedData.data.clases },
+    };
+    console.log(mainData, 'Data chingona');
 
-  columnAtributos(arr: any[][]) {
-    const length = arr[0].length;
-    let atributos = [];
-    for (let i = 0; i < length; i++) {
-      let column = [];
-      arr.forEach((element: []) => {
-        column.push(element[i]);
-      });
-      atributos.push(column);
-    }
-    return atributos;
+    // if (tipeAtt.continuos && tipeAtt.continuos.length > 0) {
+    //   if (data.clasificacion === 'FD') {
+    //   } else {
+    //     column.forEach((element: number[], index) => {
+    //       console.log(
+    //         Discretizacion.anchosIguales(
+    //           element,
+    //           transformedData.clases.length
+    //         ),
+    //         'densidad ' + index
+    //       );
+    //     });
+    //   }
+    // }
+
   }
 
   ngAfterViewInit(): void {}

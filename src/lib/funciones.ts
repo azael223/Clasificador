@@ -1,4 +1,4 @@
-export interface LaplaceI {}
+import { ColumnI, DatasetI } from '../app/main/main.component';
 
 export class Discretizacion {
   private static media(arr: number[]) {
@@ -41,14 +41,19 @@ export class Discretizacion {
     return retArr;
   }
 
-  static anchosIguales(arr: number[], bins: number) {
-    const aClases = this._anchosIguales(arr, bins);
+  static anchosIguales(columns: ColumnI, bins: number) {
+    const aClases = this._anchosIguales(columns.atributos, bins);
     let clases = [];
-    arr.forEach((element) => {
-      aClases.forEach((clase: number[]) => {
-        
+    columns.atributos.forEach((element) => {
+      aClases.some((clase: number, index) => {
+        if (element <= clase) {
+          clases.push(index + 1);
+          return true;
+        }
       });
     });
+    columns.atributos = clases;
+    return columns;
   }
 
   private static _anchosIguales(arr: number[], bins: number) {
@@ -63,24 +68,33 @@ export class Discretizacion {
   }
 }
 
+export interface LaplaceI {
+  atributos: string[][];
+  clases: string[];
+}
 export class Clasificacion {
-  laplaceC_S(data: LaplaceI[], clases: string[]) {
-    let count;
-    data.forEach((element) => {});
-    const totalclas = clases.length;
-    let total = 0;
-    for (let i = 0; i < data.length; i++) {
-      if (data.toString[i] == 'true') {
-        total++;
+  // laplaceC_S(data: LaplaceI[], clases: string[]) {
+  //   let count;
+  //   data.forEach((element) => {});
+  //   const totalclas = clases.length;
+  //   let total = 0;
+  //   for (let i = 0; i < data.length; i++) {
+  //     if (data.toString[i] == 'true') {
+  //       total++;
+  //     }
+  //   }
+  //   let laplace = count + 1 / total + totalclas;
+  // }
+  static laplaceS_S(data: LaplaceI) {
+    let claseCount = {};
+    data.clases.some((clase: string) => {
+      if (claseCount && claseCount[clase]) {
+        claseCount[clase]++;
+      } else {
+        claseCount = { ...claseCount, [clase]: 1 };
       }
-    }
-    let laplace = count + 1 / total + totalclas;
-  }
-  laplaceS_S(data: LaplaceI[], clases: string[]) {
-    let count;
-    data.forEach((element) => {});
-    const total = data.length;
-    let laplace = count / total;
+    });
+    console.log(claseCount);
   }
 }
 class Validacion {

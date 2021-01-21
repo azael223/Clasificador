@@ -1,30 +1,31 @@
+import { ColumnI, DatasetI } from '../app/main/main.component';
+
 export class Dataset {
   static identificarData(data: string[][]) {
-    let continuos = [];
-    let discretos = [];
-    data.forEach((row: string[]) => {
-      let isContinuo = true;
-      row.some((element: string) => {
-        if (Number(element)) {
-          isContinuo = true;
+    let cols: ColumnI[] = [];
+    for (let index = 0; index < data[0].length; index++) {
+      let mCol: ColumnI = { id: index, type: 'C', atributos: [] };
+      data.some((col) => {
+        if (Number(col[index])) {
+          mCol.type = 'C';
         } else {
-          isContinuo = false;
-          return;
+          mCol.type = 'D';
+          return true;
         }
       });
-      if (isContinuo) {
-        let dataContinuo: number[] = [];
-        row.forEach((element) => {
-          dataContinuo.push(Number(element));
-        });
-        continuos.push(dataContinuo);
-      } else {
-        discretos.push(row);
-      }
-    });
+      data.some((col) => {
+        if (mCol.type === 'C') {
+          mCol.atributos.push(Number(col[index]));
+        } else {
+          mCol.atributos.push(col[index]);
+        }
+      });
+      cols.push(mCol);
+    }
 
-    return { continuos, discretos };
+    return cols;
   }
+
   static extraerClase(data: string[][], index: number) {
     let clases = [];
     let atributos = [];
