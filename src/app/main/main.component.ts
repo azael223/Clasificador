@@ -10,6 +10,7 @@ export interface ColumnI {
   id: number;
   atributos: any[];
   type: string;
+  clases?: string[];
 }
 export interface DatasetI {
   clases: string[];
@@ -54,22 +55,21 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
       data: { columnas: tipeAtt, clases: transformedData.data.clases },
     };
     console.log(mainData, 'Data chingona');
-
-    // if (tipeAtt.continuos && tipeAtt.continuos.length > 0) {
-    //   if (data.clasificacion === 'FD') {
-    //   } else {
-    //     column.forEach((element: number[], index) => {
-    //       console.log(
-    //         Discretizacion.anchosIguales(
-    //           element,
-    //           transformedData.clases.length
-    //         ),
-    //         'densidad ' + index
-    //       );
-    //     });
-    //   }
-    // }
-
+    mainData.data.columnas.forEach((column, index) => {
+      if (data.clasificacion === 'AI') {
+        if (column.type === 'C') {
+          column.atributos.forEach((col) => {
+            mainData.data.columnas[index] = Discretizacion.anchosIguales(
+              column,
+              mainData.clases.length
+            );
+          });
+        }
+      }
+    });
+    console.log(mainData, 'Data chingona');
+    const laplaceData = Clasificacion.laplace(mainData, true);
+    console.log(laplaceData);
   }
 
   ngAfterViewInit(): void {}

@@ -47,11 +47,16 @@ export class Discretizacion {
     columns.atributos.forEach((element) => {
       aClases.some((clase: number, index) => {
         if (element <= clase) {
-          clases.push(index + 1);
+          clases.push(index + 1 + '');
           return true;
         }
       });
     });
+    let bin = [];
+    for (let index = 0; index < bins; index++) {
+      bin.push(index + 1 + '');
+    }
+    columns.clases = bin;
     columns.atributos = clases;
     return columns;
   }
@@ -85,16 +90,90 @@ export class Clasificacion {
   //   }
   //   let laplace = count + 1 / total + totalclas;
   // }
-  static laplaceS_S(data: LaplaceI) {
+  private static colAttClases(data: DatasetI) {
+    data.data.columnas.forEach((col, index) => {
+      if (col.type === 'D') {
+        let clases = [];
+        col.atributos.forEach((att) => {
+          if (!clases.some((clase) => att === clase)) {
+            clases.push(att);
+          }
+        });
+        data.data.columnas[index].clases = clases;
+      }
+    });
+    return data;
+  }
+  static laplace(data: DatasetI, suavizado = false) {
     let claseCount = {};
-    data.clases.some((clase: string) => {
+    data.data.clases.some((clase: string) => {
       if (claseCount && claseCount[clase]) {
         claseCount[clase]++;
       } else {
         claseCount = { ...claseCount, [clase]: 1 };
       }
     });
-    console.log(claseCount);
+    data = this.colAttClases(data);
+    let laplaceData = this.laplacePrioriS(data, claseCount);
+    Object.keys(claseCount).forEach((claseKey) => {
+      claseCount[claseKey] = claseCount[claseKey] / data.data.clases.length;
+    });
+    return { data: laplaceData, priori: claseCount };
+  }
+
+  static laplacePrioriS(data: DatasetI, totalClases: any) {
+    let prioris = [];
+    data.clases.forEach((clase) => {
+      let colPriori = {};
+      data.data.columnas.forEach((col, colIndex) => {
+        let att = {};
+        col.atributos.forEach((atributo, index) => {
+          if (data.data.clases[index] === clase) {
+            if (att && att[atributo]) {
+              att[atributo]++;
+            } else {
+              att = { ...att, [atributo]: 1 };
+            }
+          }
+        });
+        data.data.columnas[colIndex].clases.forEach((attkey) => {
+          if (!att[attkey]) {
+            att[attkey] = 0;
+          }
+          att[attkey] =
+            (att[attkey] + 1) /
+            (totalClases[clase] + data.data.columnas[colIndex].clases.length);
+        });
+        colPriori = { ...colPriori, [col.id]: att };
+      });
+      prioris.push({ clase: clase, columns: colPriori });
+    });
+    return prioris;
+  }
+
+  static laplacePriori(data: DatasetI, totalClases: any) {
+    let prioris = [];
+    data.clases.forEach((clase) => {
+      let colPriori = {};
+      data.data.columnas.forEach((col) => {
+        let att = {};
+        col.atributos.forEach((atributo, index) => {
+          if (data.data.clases[index] === clase) {
+            if (att && att[atributo]) {
+              att[atributo]++;
+            } else {
+              att = { ...att, [atributo]: 1 };
+            }
+          }
+        });
+        Object.keys(att).forEach((attkey) => {
+          att[attkey] = att[attkey] / totalClases[clase];
+        });
+        colPriori = { ...colPriori, [col.id]: att };
+      });
+      prioris.push({ clase: clase, columns: colPriori });
+    });
+    console.log(prioris);
   }
 }
 class Validacion {
