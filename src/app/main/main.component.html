@@ -8,7 +8,10 @@
   <mat-tab-group>
     <mat-tab label="Matriz de confusión">
       <div class="table-content">
-        <app-tables></app-tables>
+        <app-tables
+          [matrizColumns]="matriz1Cols"
+          [matrizData]="matriz1Data"
+        ></app-tables>
       </div>
     </mat-tab>
     <mat-tab label="Métricas de evaluación">

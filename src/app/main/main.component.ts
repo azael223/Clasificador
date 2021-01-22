@@ -3,8 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FormComponent, Data } from '../form/form.component';
-import { Clasificacion, Discretizacion } from '../../lib/funciones';
+import { Clasificacion, Discretizacion, Validacion } from '../../lib/funciones';
 import { Dataset } from 'src/lib/Dataset';
+import { MatrizColumn } from '../tables/tables.component';
 
 export interface ColumnI {
   id: number;
@@ -29,6 +30,9 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private _dialog: MatDialog) {}
 
   private onDestroy = new Subject<any>();
+
+  public matriz1Cols: MatrizColumn[] = [];
+  public matriz1Data = [];
 
   ngOnInit(): void {}
 
@@ -76,8 +80,10 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   clasificar(data: Data, laplace: any, indexClase: number, prevData: DatasetI) {
     let mainData: DatasetI;
     if (data.tipo === 'AE') {
-      const tipeAtt = Dataset.identificarData(data.datasetExt);
+      const transformedData = Dataset.extraerClase(data.datasetExt, indexClase);
+      const tipeAtt = Dataset.identificarData(transformedData.data.atributos);
       mainData = {
+        clases: transformedData.clases,
         data: { columnas: tipeAtt, clases: prevData.clases },
       };
       mainData.data.columnas.forEach((column, index) => {
@@ -96,7 +102,16 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
       mainData = prevData;
     }
     let clasificado = Clasificacion.laplaceCalc(laplace, mainData);
-    console.log(clasificado, 'clasificado');
+    let matriz = Validacion.matrizConfusion(
+      clasificado,
+      mainData.data.clases,
+      mainData.clases
+    );
+    mainData.clases.forEach((clase) => {
+      this.matriz1Cols.push({ title: clase, colDef: clase });
+    });
+
+    this.matriz1Data = matriz;
   }
 
   ngAfterViewInit(): void {}

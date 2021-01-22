@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatTable } from '@angular/material/table';
 import { Clasificacion } from '../../lib/funciones';
-interface MatrizColumn {
+export interface MatrizColumn {
   title: string;
   colDef: string;
 }
@@ -13,17 +14,19 @@ interface MatrizColumn {
 export class TablesComponent implements OnInit {
   constructor() {}
 
-  @Input('matrizColumns') matrizColumns: MatrizColumn[] = [
-    { title: 'Test', colDef: 'title1' },
-    { title: 'Test 2', colDef: 'title2' },
-    { title: 'Test 3', colDef: 'title3' },
-  ];
+  @ViewChild('table') table: MatTable<any>;
 
-  @Input('matrizData') matrizData: any[] = [
-    { title1: 'aasd', title2: 'asdas', title3: 'asdas' },
-    { title1: 'aasd', title2: 'asdas', title3: 'asdas' },
-    { title1: 'aasd', title2: 'asdas', title3: 'asdas' },
-  ];
+  public matrizColumns: MatrizColumn[] = [];
+  public matrizData = [];
+  @Input('matrizColumns') set cols(columns: MatrizColumn[]) {
+    this.matrizColumns = columns;
+    this.table.renderRows();
+  }
+
+  @Input('matrizData') set data(data: any[]) {
+    this.matrizData = data;
+    this.table.renderRows();
+  }
 
   public displayedColumns = [];
 

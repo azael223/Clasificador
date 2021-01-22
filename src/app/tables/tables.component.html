@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="matrizData">
+<table #table mat-table [dataSource]="matrizData">
   <ng-container
     *ngFor="let column of matrizColumns"
     [matColumnDef]="column.colDef"

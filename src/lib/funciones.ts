@@ -78,18 +78,6 @@ export interface LaplaceI {
   clases: string[];
 }
 export class Clasificacion {
-  // laplaceC_S(data: LaplaceI[], clases: string[]) {
-  //   let count;
-  //   data.forEach((element) => {});
-  //   const totalclas = clases.length;
-  //   let total = 0;
-  //   for (let i = 0; i < data.length; i++) {
-  //     if (data.toString[i] == 'true') {
-  //       total++;
-  //     }
-  //   }
-  //   let laplace = count + 1 / total + totalclas;
-  // }
   private static colAttClases(data: DatasetI) {
     data.data.columnas.forEach((col, index) => {
       if (col.type === 'D') {
@@ -205,7 +193,42 @@ export class Clasificacion {
     console.log(prioris);
   }
 }
-class Validacion {
+export class Validacion {
+  static matrizConfusion(
+    predicciones: string[],
+    reales: string[],
+    clases: string[]
+  ) {
+    let table = {};
+    let totalRow = {};
+    clases.forEach((clase1) => {
+      totalRow = { ...totalRow, [clase1]: 0 };
+      let tableRow = { [clase1]: {} };
+      clases.forEach((clase2) => {
+        tableRow[clase1] = { ...tableRow[clase1], [clase2]: 0 };
+      });
+      table = { ...table, [clase1]: tableRow[clase1] };
+    });
+    predicciones.forEach((prediccion, index) => {
+      table[prediccion][reales[index]]++;
+    });
+    totalRow = { ...totalRow, Total: 0 };
+    let finalTable = [];
+
+    clases.forEach((clase, index) => {
+      let total = 0;
+      Object.keys(table[clase]).forEach((claseKey) => {
+        total += table[clase][claseKey];
+        totalRow[clase] += table[claseKey][clase];
+      });
+      table[clase] = { ...table[clase], Total: total };
+      totalRow['Total'] += total;
+      finalTable.push(table[clase]);
+    });
+    finalTable.push(totalRow);
+    return finalTable;
+  }
+
   simple(data: number[], y1: number, y1_2: number) {
     let MSE = Math.pow(y1 - y1_2, 2);
     let n = data.length;
