@@ -23,6 +23,7 @@ export interface Data {
   inDis: number;
   clasificacion: string;
   indexClase: string;
+  tipo: string;
 }
 @Component({
   selector: 'app-form',
@@ -74,6 +75,7 @@ export class FormComponent implements OnInit, AfterViewInit, OnDestroy {
             validacion: this.form.get('validationType').value,
             clasificacion: this.form.get('classType').value,
             indexClase: this.form.get('classIndex').value,
+            tipo: this.form.get('readType').value,
           };
           if (datasetExt && this.form.get('readType').value === 'AE') {
             Papa.parse(datasetExt, {

@@ -13,10 +13,10 @@ export interface ColumnI {
   clases?: string[];
 }
 export interface DatasetI {
-  clases: string[];
+  clases?: string[];
   data: {
     columnas: ColumnI[];
-    clases: string[];
+    clases?: string[];
   };
 }
 
@@ -47,9 +47,10 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   entrenarClasificador(data: Data) {
-    let indexClase = data.indexClase === 'F' ? data.datasetExt[0].length : 1;
-    const transformedData = Dataset.extraerClase(data.datasetExt, indexClase);
+    let indexClase = data.indexClase === 'F' ? data.dataset[0].length : 1;
+    const transformedData = Dataset.extraerClase(data.dataset, indexClase);
     const tipeAtt = Dataset.identificarData(transformedData.data.atributos);
+    console.log(data, 'mainData');
     let mainData: DatasetI = {
       clases: transformedData.clases,
       data: { columnas: tipeAtt, clases: transformedData.data.clases },
@@ -69,7 +70,33 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     console.log(mainData, 'Data chingona');
     const laplaceData = Clasificacion.laplace(mainData, true);
-    console.log(laplaceData);
+    this.clasificar(data, laplaceData, indexClase, mainData);
+  }
+
+  clasificar(data: Data, laplace: any, indexClase: number, prevData: DatasetI) {
+    let mainData: DatasetI;
+    if (data.tipo === 'AE') {
+      const tipeAtt = Dataset.identificarData(data.datasetExt);
+      mainData = {
+        data: { columnas: tipeAtt, clases: prevData.clases },
+      };
+      mainData.data.columnas.forEach((column, index) => {
+        if (data.clasificacion === 'AI') {
+          if (column.type === 'C') {
+            column.atributos.forEach((col) => {
+              mainData.data.columnas[index] = Discretizacion.anchosIguales(
+                column,
+                prevData.clases.length
+              );
+            });
+          }
+        }
+      });
+    } else {
+      mainData = prevData;
+    }
+    let clasificado = Clasificacion.laplaceCalc(laplace, mainData);
+    console.log(clasificado, 'clasificado');
   }
 
   ngAfterViewInit(): void {}

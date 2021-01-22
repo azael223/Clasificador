@@ -121,6 +121,35 @@ export class Clasificacion {
     return { data: laplaceData, priori: claseCount };
   }
 
+  static laplaceCalc(laplace: any, data: DatasetI) {
+    let clasificados = [];
+    data.data.columnas[0].atributos.forEach((row, rowIndex) => {
+      let priorisTotals = [];
+      laplace.data.forEach((lap) => {
+        let prioriTotal = 1;
+        data.data.columnas.forEach((col, colIndex) => {
+          prioriTotal =
+            prioriTotal *
+            lap.columns[colIndex][
+              data.data.columnas[colIndex].atributos[rowIndex]
+            ];
+        });
+        prioriTotal = prioriTotal * laplace.priori[lap.clase];
+        priorisTotals.push(prioriTotal);
+      });
+      let clasificacion;
+      let max = 0;
+      priorisTotals.forEach((prioriTotal, index) => {
+        if (prioriTotal > max) {
+          max = prioriTotal;
+          clasificacion = data.clases[index];
+        }
+      });
+      clasificados.push(clasificacion);
+    });
+    return clasificados;
+  }
+
   static laplacePrioriS(data: DatasetI, totalClases: any) {
     let prioris = [];
     data.clases.forEach((clase) => {
