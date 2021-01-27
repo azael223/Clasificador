@@ -116,6 +116,9 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
     this.matriz1Data = matriz;
     console.log(matriz,"matriz")
   }
+  validar(matriz){
+    
+  }
 
   ngAfterViewInit(): void {}
 
