@@ -20,12 +20,10 @@ export class TablesComponent implements OnInit {
   public matrizData = [];
   @Input('matrizColumns') set cols(columns: MatrizColumn[]) {
     this.matrizColumns = columns;
-    this.table.renderRows();
   }
 
   @Input('matrizData') set data(data: any[]) {
     this.matrizData = data;
-    this.table.renderRows();
   }
 
   public displayedColumns = [];

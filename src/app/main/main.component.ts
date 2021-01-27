@@ -102,6 +102,8 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
       mainData = prevData;
     }
     let clasificado = Clasificacion.laplaceCalc(laplace, mainData);
+    console.log(clasificado,"data clasificado")
+    console.log(mainData.data.clases,"data normal")
     let matriz = Validacion.matrizConfusion(
       clasificado,
       mainData.data.clases,
@@ -110,8 +112,9 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
     mainData.clases.forEach((clase) => {
       this.matriz1Cols.push({ title: clase, colDef: clase });
     });
-
+    this.matriz1Cols.push({title:'Total', colDef:'Total'})
     this.matriz1Data = matriz;
+    console.log(matriz,"matriz")
   }
 
   ngAfterViewInit(): void {}

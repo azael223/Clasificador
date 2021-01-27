@@ -9,6 +9,7 @@
     <mat-tab label="Matriz de confusión">
       <div class="table-content">
         <app-tables
+        *ngIf="(matriz1Cols && matriz1Cols.length > 0) && (matriz1Data && matriz1Cols.length>0)"
           [matrizColumns]="matriz1Cols"
           [matrizData]="matriz1Data"
         ></app-tables>
