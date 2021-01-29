@@ -9,7 +9,12 @@
     <mat-tab label="Matriz de confusión">
       <div class="table-content">
         <app-tables
-        *ngIf="(matriz1Cols && matriz1Cols.length > 0) && (matriz1Data && matriz1Cols.length>0)"
+          *ngIf="
+            matriz1Cols &&
+            matriz1Cols.length > 0 &&
+            matriz1Data &&
+            matriz1Cols.length > 0
+          "
           [matrizColumns]="matriz1Cols"
           [matrizData]="matriz1Data"
         ></app-tables>
@@ -17,7 +22,19 @@
     </mat-tab>
     <mat-tab label="Métricas de evaluación">
       <div class="table-content">
-        <app-tables></app-tables>
+        <app-tables
+          *ngIf="
+            matriz2Cols &&
+            matriz2Cols.length > 0 &&
+            matriz2Data &&
+            matriz2Cols.length > 0
+          "
+          [matrizColumns]="matriz2Cols"
+          [matrizData]="matriz2Data"
+        ></app-tables>
+        <div *ngIf="matriz2Data && matriz2Data.length > 0">
+          <span>Accuarcy:{{ acc }}</span>
+        </div>
       </div>
     </mat-tab>
   </mat-tab-group>

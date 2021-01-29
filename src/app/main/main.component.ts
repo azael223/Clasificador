@@ -3,7 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FormComponent, Data } from '../form/form.component';
-import { Clasificacion, Discretizacion, Validacion } from '../../lib/funciones';
+import {
+  Clasificacion,
+  Discretizacion,
+  Evaluacion,
+  Validacion,
+} from '../../lib/funciones';
 import { Dataset } from 'src/lib/Dataset';
 import { MatrizColumn } from '../tables/tables.component';
 
@@ -34,6 +39,15 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   public matriz1Cols: MatrizColumn[] = [];
   public matriz1Data = [];
 
+  public matriz2Cols: MatrizColumn[] = [
+    { colDef: 'categoria', title: 'Categoría' },
+    { colDef: 'precision', title: 'Precisión' },
+    { colDef: 'exhaustividad', title: 'Exhaustividad' },
+    { colDef: 'medidaF', title: 'Medida F' },
+    { colDef: 'soporte', title: 'Soporte' },
+  ];
+  public matriz2Data = [];
+
   ngOnInit(): void {}
 
   openDialog() {
@@ -49,7 +63,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
   }
-
+  public acc = 0;
   entrenarClasificador(data: Data) {
     let indexClase = data.indexClase === 'F' ? data.dataset[0].length : 1;
     const transformedData = Dataset.extraerClase(data.dataset, indexClase);
@@ -102,22 +116,35 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
       mainData = prevData;
     }
     let clasificado = Clasificacion.laplaceCalc(laplace, mainData);
-    console.log(clasificado,"data clasificado")
-    console.log(mainData.data.clases,"data normal")
+    console.log(clasificado, 'data clasificado');
+    console.log(mainData.data.clases, 'data normal');
     let matriz = Validacion.matrizConfusion(
       clasificado,
       mainData.data.clases,
       mainData.clases
     );
+    this.matriz1Cols.push({ title: '', colDef: 'clase' });
     mainData.clases.forEach((clase) => {
       this.matriz1Cols.push({ title: clase, colDef: clase });
     });
-    this.matriz1Cols.push({title:'Total', colDef:'Total'})
+    this.matriz1Cols.push({ title: 'Total', colDef: 'Total' });
+
+    console.log(matriz, 'matriz');
+    this.validar(matriz, mainData.clases);
+    mainData.clases.forEach((clase, index) => {
+      matriz[index] = { ...matriz[index], clase: clase };
+    });
+    matriz[matriz.length - 1] = {
+      ...matriz[matriz.length - 1],
+      clase: 'Total',
+    };
     this.matriz1Data = matriz;
-    console.log(matriz,"matriz")
   }
-  validar(matriz){
-    
+
+  validar(matriz, clases) {
+    const metricas = Evaluacion.metricas(matriz, clases);
+    this.acc = Evaluacion.accuaracy(matriz, clases);
+    this.matriz2Data = metricas;
   }
 
   ngAfterViewInit(): void {}

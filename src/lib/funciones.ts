@@ -248,26 +248,81 @@ export class Validacion {
     return suma / k;
   }
 }
-class Evaluación {
-  //confusion(arr:number[],TP:number,TN:number) {}
-  precision(arr: number[], TP: number, FP: number) {
-    const total = arr.length;
-    const Acc = TP / (TP + FP);
-    return Acc;
+export class Evaluacion {
+  static metricas(matriz, clases) {
+    const recall = Evaluacion.recall(matriz, clases);
+    const precision = Evaluacion.precision(matriz, clases);
+    const f1 = Evaluacion.medidaF1(recall, precision);
+    console.log(recall, 'recall');
+    console.log(precision, 'precision');
+    console.log(f1, 'medida f1');
+    let ret = [];
+    let prom = {
+      categoria: 'Promedio',
+      precision: 0,
+      exhaustividad: '-',
+      medidaF: 0,
+      soporte: 0,
+    };
+    clases.forEach((clase) => {
+      prom = {
+        ...prom,
+        precision: prom.precision + precision[clase],
+        medidaF: prom.medidaF + f1[clase],
+        soporte: prom.soporte + recall[clase],
+      };
+      ret.push({
+        categoria: clase,
+        precision: precision[clase],
+        exhaustividad: '-',
+        medidaF: f1[clase],
+        soporte: recall[clase],
+      });
+    });
+    ret.push(prom);
+    return ret;
   }
-  exhaustividad(arr: number[], TP: number, FN: number) {
-    const total = arr.length;
-    const Acc = TP / (TP + FN);
-    return Acc;
+  static medidaF1(recall: any, precision: any) {
+    let ret = {};
+    Object.keys(recall).forEach((clase) => {
+      ret = {
+        ...ret,
+        [clase]:
+          2 *
+          ((recall[clase] * precision[clase]) /
+            (recall[clase] + precision[clase])),
+      };
+    });
+    return ret;
   }
-  f1(arr: number[], precisionF: number, recall: number) {
-    this.precision(arr, precisionF, recall); //
-    const total = (2 * (precisionF * recall)) / (precisionF + recall);
-    return total;
+
+  static recall(matriz: any[], clases: string[]) {
+    let ret = {};
+    clases.forEach((clase, index) => {
+      ret = {
+        ...ret,
+        [clase]: matriz[index][clase] / matriz[matriz.length - 1][clase],
+      };
+    });
+    return ret;
   }
-  accuracy(arr: number[], TP: number, TN: number) {
-    const total = arr.length;
-    const Acc = TP + TN / total;
-    return Acc;
+
+  static precision(matriz: any[], clases: string[]) {
+    let ret = {};
+    clases.forEach((clase, index) => {
+      ret = {
+        ...ret,
+        [clase]: matriz[index][clase] / matriz[index]['Total'],
+      };
+    });
+    return ret;
+  }
+
+  static accuaracy(matriz: any[], clases: string[]) {
+    let sum = 0;
+    clases.forEach((clase, index) => {
+      sum += matriz[index][clase];
+    });
+    return sum / matriz[matriz.length - 1]['Total'];
   }
 }
