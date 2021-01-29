@@ -92,6 +92,9 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   clasificar(data: Data, laplace: any, indexClase: number, prevData: DatasetI) {
+    this.matriz1Cols = [];
+    this.matriz1Data = [];
+    this.matriz2Data = [];
     let mainData: DatasetI;
     if (data.tipo === 'AE') {
       const transformedData = Dataset.extraerClase(data.datasetExt, indexClase);
