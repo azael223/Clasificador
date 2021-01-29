@@ -260,23 +260,23 @@ export class Evaluacion {
     let prom = {
       categoria: 'Promedio',
       precision: 0,
-      exhaustividad: '-',
+      exhaustividad: 0,
       medidaF: 0,
-      soporte: 0,
+      soporte: '-',
     };
     clases.forEach((clase) => {
       prom = {
         ...prom,
         precision: prom.precision + precision[clase],
         medidaF: prom.medidaF + f1[clase],
-        soporte: prom.soporte + recall[clase],
+        exhaustividad: prom.exhaustividad + recall[clase],
       };
       ret.push({
         categoria: clase,
         precision: precision[clase],
-        exhaustividad: '-',
+        exhaustividad: recall[clase],
         medidaF: f1[clase],
-        soporte: recall[clase],
+        soporte: '-',
       });
     });
     ret.push(prom);

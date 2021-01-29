@@ -106,7 +106,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
             column.atributos.forEach((col) => {
               mainData.data.columnas[index] = Discretizacion.anchosIguales(
                 column,
-                prevData.clases.length
+                data.inDis
               );
             });
           }
