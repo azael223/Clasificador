@@ -51,6 +51,9 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {}
 
   openDialog() {
+    this.matriz1Cols = [];
+    this.matriz1Data = [];
+    this.matriz2Data = [];
     const dialog = this._dialog.open(FormComponent, {
       width: '800px',
     });
@@ -65,6 +68,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   public acc = 0;
   entrenarClasificador(data: Data) {
+
     let indexClase = data.indexClase === 'F' ? data.dataset[0].length : 1;
     const transformedData = Dataset.extraerClase(data.dataset, indexClase);
     const tipeAtt = Dataset.identificarData(transformedData.data.atributos);
@@ -92,9 +96,7 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   clasificar(data: Data, laplace: any, indexClase: number, prevData: DatasetI) {
-    this.matriz1Cols = [];
-    this.matriz1Data = [];
-    this.matriz2Data = [];
+
     let mainData: DatasetI;
     if (data.tipo === 'AE') {
       const transformedData = Dataset.extraerClase(data.datasetExt, indexClase);
